@@ -1,23 +1,45 @@
 package mr
 
+import "fmt"
+
 //
 // RPC definitions.
 //
-// remember to capitalize all names.
-//
 
-//
-// example to show how to declare the arguments
-// and reply for an RPC.
-//
+type TaskType byte
 
-type ExampleArgs struct {
-	X int
+const (
+	None TaskType = iota
+	Map
+	Reduce
+)
+
+func (t TaskType) String() string {
+	switch t {
+	case None:
+		return "None"
+	case Map:
+		return "Map"
+	case Reduce:
+		return "Reduce"
+	default:
+		return fmt.Sprintf("TaskType(%d)", byte(t))
+	}
 }
 
-type ExampleReply struct {
-	Y int
+type SubmitAndAcquireArgs struct {
+	WorkerId int
+	TaskId   int
+	TaskType TaskType
 }
 
-// Add your RPC definitions here.
+type SubmitAndAcquireReply struct {
+	TaskId   int
+	TaskType TaskType
+	Done     bool
 
+	InFilePath string // for map
+	NReduce    int    // for map
+
+	NMap int // for reduce
+}
